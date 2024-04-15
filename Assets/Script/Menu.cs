@@ -1,12 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class Carrot : MonoBehaviour
+public class Menu : MonoBehaviour
 {
-    public GameObject wheel;
-    public Vector3 offset = new Vector3(0, 0, 0);
-
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +14,11 @@ public class Carrot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.transform.position = wheel.transform.position + offset;
+        
+    }
+
+    public void startGame()
+    {
+        SceneManager.LoadScene("Fishing");
     }
 }
