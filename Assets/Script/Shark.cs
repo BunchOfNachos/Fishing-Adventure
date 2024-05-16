@@ -11,7 +11,7 @@ public class Shark : MonoBehaviour
     [Header("Before an attack")]
     public float attack_interval = 15;
     public float attack_interval_interrupted = 45;
-    public float next_attack = 0;
+    public float next_attack = 15;
     [Header("During the attack")]
     public float signal_time = 4;
     private float signal_remaining_time;
@@ -21,10 +21,14 @@ public class Shark : MonoBehaviour
     private float z_offset;
     private Vector3 direction;
 
+    private Manager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameManager = GameObject.Find("Game manager").GetComponent<Manager>();
+        boat_transform = GameObject.Find("Boat").GetComponent<Transform>();
+        transform.position = new Vector3(transform.position.x, -10000, transform.position.z);
     }
 
     // Update is called once per frame
@@ -76,7 +80,7 @@ public class Shark : MonoBehaviour
         attack_signal.Stop();
         animator.Rebind();
         time_to_attack = false;
-        transform.position = new Vector3(transform.position.x, -3, transform.position.z);
+        transform.position = new Vector3(transform.position.x, -10000, transform.position.z);
         time_to_attack = false;
         next_attack = attack_interval;
     }
@@ -86,7 +90,7 @@ public class Shark : MonoBehaviour
         attack_signal.Stop();
         animator.Rebind();
         time_to_attack = false;
-        transform.position = new Vector3(transform.position.x, -3, transform.position.z);
+        transform.position = new Vector3(transform.position.x, -10000, transform.position.z);
         time_to_attack = false;
         next_attack = time_until_next_attack;
     }

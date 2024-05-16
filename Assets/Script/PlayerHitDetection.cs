@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class PlayerHitDetection : MonoBehaviour
 {
+
+    private Manager gameManager;
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameManager = GameObject.Find("Game manager").GetComponent<Manager>();
     }
 
     // Update is called once per frame
@@ -18,14 +20,9 @@ public class PlayerHitDetection : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Shark"))
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Fishing");
-        }
-
         if (other.gameObject.CompareTag("MainCamera"))
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Fishing");
+            gameManager.timerEnded();
         }
     }
 }

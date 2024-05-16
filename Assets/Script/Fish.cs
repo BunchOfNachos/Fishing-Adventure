@@ -35,6 +35,7 @@ public class Fish : MonoBehaviour
     {
         game_manager = GameObject.Find("Game manager").GetComponent<Manager>();
         boat_transform = GameObject.Find("Boat").GetComponent<Transform>();
+        teleport();
         StartCoroutine(jump());
     }
 
@@ -78,11 +79,16 @@ public class Fish : MonoBehaviour
             game_manager.SetCountText();
             audio_source.PlayOneShot(caught_sound);
 
-            float x_offset = Random.Range(-4f, 4f);
-            float z_offset = Random.Range(-4f, 4f);
-
-            transform.position = new Vector3(boat_transform.position.x + x_offset, transform.position.y, boat_transform.position.z + z_offset);
+            teleport();
         }
+    }
+
+    private void teleport()
+    {
+        float x_offset = Random.Range(-4f, 4f);
+        float z_offset = Random.Range(-4f, 4f);
+
+        transform.position = new Vector3(boat_transform.position.x + x_offset, transform.position.y, boat_transform.position.z + z_offset);
     }
 
     private IEnumerator jump()

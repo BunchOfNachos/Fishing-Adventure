@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class Manager : MonoBehaviour
@@ -9,10 +10,14 @@ public class Manager : MonoBehaviour
     public TextMeshProUGUI fish2_text;
     public TextMeshProUGUI fish3_text;
     public TextMeshProUGUI timer_text;
+    public Text timer;
+    public Button start_button;
 
     public GameObject fish_prefab;
+    public GameObject shark_prefab;
 
-    public float targetTime = 60f;
+    public float initial_target_time = 120f;
+    private float targetTime = 120f;
     public float fish_apparition_rate = 30f;
     private float last_fish_apparition = 0f;
     private Transform boat_transform;
@@ -20,6 +25,8 @@ public class Manager : MonoBehaviour
     private int fish1_count = 0;
     private int fish2_count = 0;
     private int fish3_count = 0;
+
+    private bool game_is_playing = false;
 
     // Start is called before the first frame update
     void Start()
@@ -32,23 +39,25 @@ public class Manager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        targetTime -= Time.deltaTime;
-        last_fish_apparition += Time.deltaTime;
+        if (game_is_playing)
+        {
+            targetTime -= Time.deltaTime;
+            last_fish_apparition += Time.deltaTime;
 
-        if (last_fish_apparition > fish_apparition_rate)
-        {
-            Vector3 spawn_position = new Vector3(Random.Range(-1, 1), 0, Random.Range(-1, 1)).normalized * 10;
-            Instantiate(fish_prefab, boat_transform.position + spawn_position, Quaternion.identity);
-            last_fish_apparition = 0f;
-        }
+            if (last_fish_apparition > fish_apparition_rate)
+            {
+                Instantiate(fish_prefab);
+                last_fish_apparition = 0f;
+            }
 
-        if (targetTime <= 0.0f)
-        {
-            timerEnded();
-        }
-        else
-        {
-            timer_text.text = targetTime.ToString("F2");
+            if (targetTime <= 0.0f)
+            {
+                timerEnded();
+            }
+            else
+            {
+                timer_text.text = targetTime.ToString("F2");
+            }
         }
     }
 
@@ -64,8 +73,29 @@ public class Manager : MonoBehaviour
         fish1_count++;
     }
 
-    void timerEnded()
+    public void StartGame()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Fishing");
+        game_is_playing = true;
+        start_button.gameObject.SetActive(false);
+        timer_text.gameObject.SetActive(true);
+        targetTime = initial_target_time;
+        fish1_count = 0;
+
+        Instantiate(fish_prefab);
+        Instantiate(shark_prefab);
+    }
+
+    public void timerEnded()
+    {
+        game_is_playing = false;
+        timer_text.gameObject.SetActive(false);
+        start_button.gameObject.SetActive(true);
+
+        GameObject[] objects_to_destroy = GameObject.FindGameObjectsWithTag("Destroy");
+
+        foreach (GameObject item in objects_to_destroy)
+        {
+            Destroy(item);
+        }
     }
 }
